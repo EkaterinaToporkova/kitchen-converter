@@ -1,0 +1,30 @@
+
+.history_content {
+    flex-grow: 1;
+    background-image: url(../../assets/images/food.png);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+    width: 600px;
+    height: 800px;
+  }
+  
+  .history {
+    display: inline-block;
+    background-color: #faf8e5;
+    padding: 30px;
+    box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
+    margin-top: 71px;
+    
+  }
+  
+  .history h4 {
+    margin: 0 0 20px;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .history__item {
+    margin-bottom: 20px;
+  }
+  

@@ -29,8 +29,9 @@ ul {
 .wrapper {
   padding: 84px 100px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   gap: 40px;
 }
 

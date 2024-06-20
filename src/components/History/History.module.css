@@ -5,7 +5,7 @@
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: contain;
-    width: 600px;
+    max-width: 600px;
     height: 800px;
   }
   

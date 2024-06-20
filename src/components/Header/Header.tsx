@@ -8,9 +8,7 @@ export const Header : React.FC = () => {
         <div className="container">
           <div className={styles.wrapper}>
             <div className={styles.logo}>
-              <div className={styles.header__logo}>
                 <img src={logo} alt="Логотип" loading="lazy" />
-              </div>
               <p>Перевод мер и весов для кулинарных рецептов</p>
             </div>
             <nav className={styles.header__nav}>

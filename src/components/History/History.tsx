@@ -4,7 +4,7 @@ import close from "../../assets/icon/close.svg"
 import tape from "../../assets/icon/tape.svg"
 
 
-export const History = () => {
+export const History : React.FC = () => {
     return (
         <div className={styles.history_content}>
                 <div className={styles.history}>

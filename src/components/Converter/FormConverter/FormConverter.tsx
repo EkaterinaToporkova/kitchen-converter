@@ -3,7 +3,7 @@ import close from "../../../assets/icon/close.svg";
 import styles from "./FormConverter.module.css";
 import Select, { StylesConfig } from "react-select";
 import products from "../../../data/products.json";
-import expendMoreIcon from '../../../assets/icon/expand_more.svg'
+import expendMoreIcon from "../../../assets/icon/expand_more.svg";
 
 export const FormConverter: React.FC = () => {
   const option_products = Object.entries(products).map(([value, label]) => ({
@@ -13,50 +13,97 @@ export const FormConverter: React.FC = () => {
 
   const option_weight = [
     {
-     "gram":"грамма",
-     "kilogram": "килограмм",
-     "ounce": "унция",
-     "lb": "фунт"
-    }
-  ]
+      gram: "грамма",
+      kilogram: "килограмм",
+      ounce: "унция",
+      lb: "фунт",
+    },
+  ];
 
   const DropdownIndicator = null;
 
   const baseStyles: StylesConfig = {
     control: (provided, state) => ({
       ...provided,
-      fontSize: "15px",
+      // fontSize: "15px",
       color: "#9f9f9f",
       border: "1px solid #779d77",
-      borderRadius: "6px",
       padding: "10px",
       margin: "20px 0 30px",
-      background:
-        `transparent url(${expendMoreIcon}) no-repeat`,
-      backgroundPosition: "466px 18px",
+      background: `transparent url(${expendMoreIcon}) no-repeat`,
       appearance: "none",
       WebkitAppearance: "none",
       MozAppearance: "none",
       boxShadow: state.isFocused ? "0 0 0 1px #779d77" : "none",
-      "&:hover": {
-        borderColor: "#0c340c",
-        opacity: "0.9",
-        cursor: "pointer"
-      },
+    }),
+    valueContainer: (provided) => ({
+      ...provided,
+      padding: "0px",
+    }),
+    placeholder: (provided) => ({
+      ...provided,
+      padding: "0px",
+      color: "none",
+      margin: "0px",
+      fontSize: "15px"
+
+    }),
+    input: (provided) => ({
+      ...provided,
+      margin: "0px",
+      color: "#000"
     }),
     menu: (provided) => ({
       ...provided,
       zIndex: 5,
-    })
+      borderRadius: "6px"
+      
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      scrollbarColor:"#779d77 #ffffff",
+      borderRadius: "6px",
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? '#779d77'
+        : state.isFocused
+        ? '#d3e9d3'
+        : undefined,
+      color: state.isSelected ? 'white' : 'black',
+      '&:hover': {
+        backgroundColor: '#d3e9d3',
+        color: 'black',
+      },
+    }),
   };
 
   const formGroup: StylesConfig = {
+    control: (provided, state) => ({
+      ...provided,
+      borderRadius: "6px",
+      width: "500px",
+      backgroundPosition: "466px 18px",
+      height: "52px",
+      padding: "10px",
+      boxShadow: state.isFocused ? "0 0 0 1px #779d77" : "none",
+      "&:hover": {
+        borderColor: "#0c340c",
+        opacity: "0.9",
+        cursor: "pointer",
+    }}),
+  };
+
+  const optionWeight: StylesConfig = {
     control: (provided) => ({
       ...provided,
-      width: "500px",
+      borderRadius: "6px",
+      width: "260px",
       height: "52px",
-    })
-  }
+      backgroundPosition: "206px 12px",
+    }),
+  };
 
   const mergedBasedFormGroup: StylesConfig = {
     ...baseStyles,
@@ -66,10 +113,19 @@ export const FormConverter: React.FC = () => {
     }),
   };
 
+  const mergedBasedOptionWeight: StylesConfig = {
+    ...baseStyles,
+    control: (provided, state) => ({
+      ...baseStyles.control?.(provided, state),
+      ...optionWeight.control?.(provided, state),
+    }),
+  };
+
   const [someState, setSomeState] = useState<number>(0);
+  const [menuIsOpen, setMenuIsOpen] = useState(true);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSomeState(Number(e.target.value));
+    setSomeState(Number(e.target.value));  
   };
   return (
     <div className={styles.fields_input}>
@@ -84,6 +140,9 @@ export const FormConverter: React.FC = () => {
           placeholder="Введите или выберите из списка"
           components={{ DropdownIndicator }}
           id="product"
+          menuIsOpen={menuIsOpen}
+          onFocus={() => setMenuIsOpen(true)} // Открывает меню при фокусе
+          onBlur={() => setMenuIsOpen(true)} // Оставляет меню открытым при потере фокуса
         />
         {/* ------------------------------------------------- */}
         {/* Параметр измерения */}
@@ -122,13 +181,13 @@ export const FormConverter: React.FC = () => {
             onChange={handleChange}
             name="count"
           />
-           <Select
-          options={option_weight}
-          styles={formGroup}
-          placeholder="Введите или выберите из списка"
-          components={{ DropdownIndicator }}
-          id="parameter_select"
-        />
+          <Select
+            options={option_weight}
+            styles={mergedBasedOptionWeight}
+            placeholder="Введите или выберите из списка"
+            components={{ DropdownIndicator }}
+            id="parameter_select"
+          />
           {/* <select id="parameter_select">
             <option disabled selected value="">
               Мера

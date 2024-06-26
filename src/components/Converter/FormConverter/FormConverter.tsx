@@ -45,36 +45,48 @@ export const FormConverter: React.FC = () => {
       padding: "0px",
       color: "none",
       margin: "0px",
-      fontSize: "15px"
-
+      fontSize: "15px",
     }),
     input: (provided) => ({
       ...provided,
       margin: "0px",
-      color: "#000"
+      color: "#000",
     }),
     menu: (provided) => ({
       ...provided,
       zIndex: 5,
-      borderRadius: "6px"
-      
+      borderRadius: "6px",
+      marginTop: "2px",
     }),
     menuList: (provided) => ({
       ...provided,
-      scrollbarColor:"#779d77 #ffffff",
-      borderRadius: "6px",
+      "::-webkit-scrollbar": {
+        width: "6px",
+        height: "0px",
+      },
+      "::-webkit-scrollbar-track": {
+        background: "none",
+      },
+      "::-webkit-scrollbar-thumb": {
+        background: "#779d77",
+        borderRadius: "6px",
+      },
+      "::-webkit-scrollbar-thumb:hover": {
+        background: "#d3e9d3",
+        opacity: "0.6",
+      },
     }),
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? '#779d77'
+        ? "#d3e9d3"
         : state.isFocused
-        ? '#d3e9d3'
+        ? "#faf8e5"
         : undefined,
-      color: state.isSelected ? 'white' : 'black',
-      '&:hover': {
-        backgroundColor: '#d3e9d3',
-        color: 'black',
+      color: "black",
+      borderRadius: "4px",
+      "&:hover": {
+        backgroundColor: "#faf8e5",
       },
     }),
   };
@@ -92,7 +104,8 @@ export const FormConverter: React.FC = () => {
         borderColor: "#0c340c",
         opacity: "0.9",
         cursor: "pointer",
-    }}),
+      },
+    }),
   };
 
   const optionWeight: StylesConfig = {
@@ -122,10 +135,9 @@ export const FormConverter: React.FC = () => {
   };
 
   const [someState, setSomeState] = useState<number>(0);
-  const [menuIsOpen, setMenuIsOpen] = useState(true);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSomeState(Number(e.target.value));  
+    setSomeState(Number(e.target.value));
   };
   return (
     <div className={styles.fields_input}>
@@ -140,9 +152,6 @@ export const FormConverter: React.FC = () => {
           placeholder="Введите или выберите из списка"
           components={{ DropdownIndicator }}
           id="product"
-          menuIsOpen={menuIsOpen}
-          onFocus={() => setMenuIsOpen(true)} // Открывает меню при фокусе
-          onBlur={() => setMenuIsOpen(true)} // Оставляет меню открытым при потере фокуса
         />
         {/* ------------------------------------------------- */}
         {/* Параметр измерения */}

@@ -3,13 +3,16 @@ import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { ArrowDownIcon } from "../../icons";
-import styles from "./FormConverter.module.css";
+import styles from "./FormConverter.module.css"
+import { outlinedInputStyles } from "./FormConverterStyle";
 
 export const FormConverter: React.FC = () => {
+
   // const [someState, setSomeState] = useState<number>(0);
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSomeState(Number(e.target.value));
   // };
+
   return (
     <div className={styles.fields_input}>
       <label htmlFor="product">
@@ -19,39 +22,19 @@ export const FormConverter: React.FC = () => {
         disablePortal
         id="combo-box-demo"
         options={top100Films}
-        sx={{
-          margin: "20px 0 30px",
-          height: 52,
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              border: "1px solid #779d77", // Пример кастомной границы
-              borderRadius: "6px",
-            },
-            "&:hover fieldset": {
-              borderColor: "#5a8b5a", // Цвет границы при наведении
-              opacity: 0.9,
-              coursor: "pointer",
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#779d77", // Цвет границы при фокусе и открытом списке
-            },
-          },
-          "& .Mui-focused": {
-            color: "#779d77",
-          },
-          // "& .MuiInputLabel-root": {
-          //   "& .Mui-focused": {
-          //     color: "#779d77",
-          //   },
-          // },
-        }}
+        sx={outlinedInputStyles}
         renderInput={(params) => {
           return (
             <TextField
               {...params}
               label="Введите или выберите из списка"
-              variant="outlined"
-              fullWidth
+              InputLabelProps={{
+                sx: {
+                  "&.MuiInputLabel-shrink": {
+                    color: "#779d77", // Ваш цвет
+                  },
+                },
+              }}
             />
           );
         }}

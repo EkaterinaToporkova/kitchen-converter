@@ -5,6 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { ArrowDownIcon } from "../../icons";
 import styles from "./FormConverter.module.css"
 import { outlinedInputStyles } from "./FormConverterStyle";
+import products from "../../../data/products.json";
 
 export const FormConverter: React.FC = () => {
 
@@ -12,6 +13,11 @@ export const FormConverter: React.FC = () => {
   // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSomeState(Number(e.target.value));
   // };
+
+  const option_products = Object.entries(products).map(([value, label]) => ({
+    value,
+    label,
+  }));
 
   return (
     <div className={styles.fields_input}>
@@ -21,7 +27,7 @@ export const FormConverter: React.FC = () => {
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={top100Films}
+        options={option_products}
         sx={outlinedInputStyles}
         renderInput={(params) => {
           return (
@@ -31,7 +37,7 @@ export const FormConverter: React.FC = () => {
               InputLabelProps={{
                 sx: {
                   "&.MuiInputLabel-shrink": {
-                    color: "#779d77", // Ваш цвет
+                    color: "#779d77",
                   },
                 },
               }}

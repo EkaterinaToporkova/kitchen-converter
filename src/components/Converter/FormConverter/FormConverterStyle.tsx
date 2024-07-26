@@ -1,9 +1,7 @@
+// Cтиль для ширины между текстом и полем + стиль для поля
 export const outlinedInputStyles = {
-  "& .MuiInpuLable-shrink": {
-    color: "red",
-  },
-  margin: "20px 0 30px",
-  height: 52,
+  marginTop: "20px",
+
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       border: "1px solid #779d77",
@@ -20,3 +18,13 @@ export const outlinedInputStyles = {
     borderColor: "#779d77 !important", // Цвет обводки при фокусе
   },
 };
+
+// Стиль для текста + поля (отступ снизу 30px)
+export const FormControlStyles = {
+  color: "#303030",
+  marginBottom: "30px",
+  "& .Mui-focused": {
+    color: "inherit !important",
+  },
+};
+

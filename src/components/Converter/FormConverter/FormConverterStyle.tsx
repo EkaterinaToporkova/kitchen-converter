@@ -28,3 +28,5 @@ export const FormControlStyles = {
   },
 };
 
+// Стили для радио кнопок
+

@@ -102,7 +102,6 @@ export const FormConverter: React.FC = () => {
         >
           <FormControlLabel
             value="Объем"
-            sx={{ ". &MuiTypography-root": { fontSize: "12px" } }}
             control={
               <Radio
                 sx={{
@@ -130,16 +129,40 @@ export const FormConverter: React.FC = () => {
         </RadioGroup>
       </FormControl>
       {/* Количество */}
-      <FormControl fullWidth sx={FormControlStyles}>
+      <FormControl
+        sx={FormControlStyles}
+        className={styles.input__count__parametr}
+      >
         <FormLabel
           component="legend"
           sx={{
             color: "#303030",
+            "&.Mui-focused": {
+              color: "#779d77 !important",
+            },
           }}
         >
           <p>Количество</p>
         </FormLabel>
-        </FormControl>
+        <TextField
+          id="outlined-number"
+          label="Введите число"
+          type="number"
+          sx={outlinedInputStyles}
+          InputLabelProps={{
+            sx: {
+              "&.MuiInputLabel-shrink": {
+                color: "#779d77 !important",
+                "&.Mui-focused": {
+                  color: "#779d77 !important",
+                },
+              },
+            },
+          }}
+        />
+      </FormControl>
+
+      {/* Во что пересчитать */}
       <FormControl fullWidth sx={FormControlStyles}>
         <FormLabel
           component="legend"

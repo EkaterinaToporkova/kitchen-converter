@@ -8,4 +8,10 @@
   margin-block: 0;
 }
 
+.input__count__parametr {
+  gap: 20px;
+  width: 500px;
+  height: 52px;
+}
+
 

@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { ArrowDownIcon, RadioButtinIcon } from "../../icons";
 import styles from "./FormConverter.module.css";
-import { outlinedInputStyles } from "./FormConverterStyle";
+import { InputCountParametr, outlinedInputStyles } from "./FormConverterStyle";
 import { FormControlStyles } from "./FormConverterStyle";
 import products from "../../../data/products.json";
 import measure from "../../../data/measure.json";
@@ -129,10 +129,8 @@ export const FormConverter: React.FC = () => {
         </RadioGroup>
       </FormControl>
       {/* Количество */}
-      <FormControl
-        sx={FormControlStyles}
-        className={styles.input__count__parametr}
-      >
+      <Box component="div" height={"95px"} sx={InputCountParametr}>
+        {/* Ввод числа */}
         <FormLabel
           component="legend"
           sx={{
@@ -144,24 +142,56 @@ export const FormConverter: React.FC = () => {
         >
           <p>Количество</p>
         </FormLabel>
-        <TextField
-          id="outlined-number"
-          label="Введите число"
-          type="number"
-          sx={outlinedInputStyles}
-          InputLabelProps={{
-            sx: {
-              "&.MuiInputLabel-shrink": {
-                color: "#779d77 !important",
-                "&.Mui-focused": {
-                  color: "#779d77 !important",
+        {/* Ввод меры */}
+        <Box component="div" display={"flex"}>
+          <FormControl sx={{ flex: 1}}>
+            <TextField
+              id="outlined-number"
+              label="Введите число"
+              type="number"
+              sx={outlinedInputStyles}
+              InputLabelProps={{
+                sx: {
+                  "&.MuiInputLabel-shrink": {
+                    color: "#779d77 !important",
+                    "&.Mui-focused": {
+                      color: "#779d77 !important",
+                    },
+                  },
                 },
-              },
-            },
-          }}
-        />
-      </FormControl>
-
+              }}
+            />
+          </FormControl>
+          <FormControl sx={{ flex: 1, marginLeft: "20px", ...FormControlStyles }}>
+            <Autocomplete
+              disablePortal
+              id="product"
+              options={option_products}
+              sx={outlinedInputStyles}
+              renderInput={(params) => {
+                return (
+                  <TextField
+                    {...params}
+                    label="Мера"
+                    InputLabelProps={{
+                      sx: {
+                        "&.MuiInputLabel-shrink": {
+                          color: "#779d77 !important",
+                          "&.Mui-focused": {
+                            color: "#779d77 !important",
+                          },
+                        },
+                      },
+                    }}
+                  />
+                );
+              }}
+              closeText="Close"
+              popupIcon={<ArrowDownIcon color="#779D77" />}
+            />
+          </FormControl>
+        </Box>
+      </Box>
       {/* Во что пересчитать */}
       <FormControl fullWidth sx={FormControlStyles}>
         <FormLabel

@@ -1,3 +1,5 @@
+import { alignProperty } from "@mui/material/styles/cssUtils";
+
 // Cтиль для ширины между текстом и полем + стиль для поля
 export const outlinedInputStyles = {
   marginTop: "20px",
@@ -28,5 +30,11 @@ export const FormControlStyles = {
   },
 };
 
-// Стили для радио кнопок
+export const InputCountParametr = {
+  color: "#303030",
+  marginBottom: "30px",
+  "& .Mui-focused": {
+    color: "inherit !important",
+  },
+}
 

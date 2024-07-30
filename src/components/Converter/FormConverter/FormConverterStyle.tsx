@@ -1,4 +1,4 @@
-import { alignProperty } from "@mui/material/styles/cssUtils";
+// import { alignProperty } from "@mui/material/styles/cssUtils";
 
 // Cтиль для ширины между текстом и полем + стиль для поля
 export const outlinedInputStyles = {
@@ -9,9 +9,11 @@ export const outlinedInputStyles = {
       border: "1px solid #779d77",
       borderRadius: "6px",
     },
+    
   },
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: "#779d77 !important", // Цвет для обводки
+    
   },
   "&:hover .MuiOutlinedInput-notchedOutline": {
     borderColor: "#779d77 !important", // Цвет обводки при наведении
@@ -36,5 +38,4 @@ export const InputCountParametr = {
   "& .Mui-focused": {
     color: "inherit !important",
   },
-}
-
+};

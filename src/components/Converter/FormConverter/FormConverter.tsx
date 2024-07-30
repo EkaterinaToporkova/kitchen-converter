@@ -26,16 +26,30 @@ export const FormConverter: React.FC = () => {
   //   setSomeState(Number(e.target.value));
   // };
 
-  // useState для заполнения поля «Мера»
-  // const [selectedValue, setSelectedValue] = React.useState("Объем");
-  // const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSelectedValue(event.target.value);
-  // };
+  interface FormData {
+    products: string; // Значение автодополнения может быть объектом или null
+    radio_buttons: string; // Значение радиокнопок
+    number: string; // Ввод числа
+    measure_number: string;
+    measure: string;
+  }
+
+  const [formData, setFormData] = React.useState<FormData>({
+    products: "",
+    radio_buttons: "",
+    number: "",
+    measure_number: "",
+    measure: "",
+  });
+
+  // ПОЛЕ «ПРОДУКТ»
+  // 1. Описание интерфейса для поля «Продукт»
   interface ProductOption {
     value: string;
     label: string;
   }
 
+  // 2. Получение списка продуктов для поля «Продукт»
   const option_products: ProductOption[] = Object.entries(products).map(
     ([value, label]) => ({
       value,
@@ -43,40 +57,7 @@ export const FormConverter: React.FC = () => {
     })
   );
 
-  interface FormData {
-    products: string; // Значение автодополнения может быть объектом или null
-    radio_buttons: string; // Значение радиокнопок
-    message: string; // Сообщение или другое поле
-  }
-
-  const option_measure = Object.entries(measure).map(([value, label]) => ({
-    value,
-    label,
-  }));
-
-  const option_weight = Object.entries(weight).map(([value, label]) => ({
-    value,
-    label,
-  }));
-
-  const option_volume = Object.entries(volume).map(([value, label]) => ({
-    value,
-    label,
-  }));
-
-  const [formData, setFormData] = React.useState<FormData>({
-    products: "",
-    radio_buttons: "",
-    message: "",
-  });
-
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = event.target;
-  //   setFormData({
-  //     ...formData,
-  //     [name]: value,
-  //   });
-  // };
+  // 3. Обработчик
 
   const handleAutocompleteChange = (
     event: React.SyntheticEvent,
@@ -88,6 +69,7 @@ export const FormConverter: React.FC = () => {
     });
   };
 
+  //  ПОЛЕ «ПАРАМЕТР ИЗМЕРЕНИЯ»
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -95,13 +77,71 @@ export const FormConverter: React.FC = () => {
     });
   };
 
+  // ПОЛЕ «ВВЕДИТЕ ЧИСЛО»
+  const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      number: event.target.value,
+    });
+  };
+
+  // ПОЛЕ «МЕРА»
+
+  // 1. Получение списка продуктов
+  const option_weight = Object.entries(weight).map(([value, label]) => ({
+    value,
+    label,
+  }));
+
+  const option_volume = Object.entries(volume).map(([value, label]) => ({
+    value,
+    label,
+  }));
+
+  const options_weight_volume =
+    formData.radio_buttons === "Объем" ? option_volume : option_weight;
+
+  // 2. Описание интерфейса поля «Мера»
+  interface MeasureNumberOption {
+    value: string;
+    label: string;
+  }
+  // Обработчик
+  const handleMeasureNumberChange = (
+    event: React.SyntheticEvent,
+    newValue: MeasureNumberOption | null
+  ) => {
+    setFormData({
+      ...formData,
+      measure_number: newValue ? newValue.label : "",
+    });
+  };
+
+  // ПОЛЕ «МЕРА ИЛИ МЕРНЫЙ ПРЕДМЕТ
+  const option_measure = Object.entries(measure).map(([value, label]) => ({
+    value,
+    label,
+  }));
+
+  interface MeasureOption {
+    value: string;
+    label: string;
+  }
+
+  const handleMeasureChange = (
+    event: React.SyntheticEvent,
+    newValue: MeasureOption | null
+  ) => {
+    setFormData({
+      ...formData,
+      measure: newValue ? newValue.label : "",
+    });
+  };
+
   const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     console.log(formData);
   };
-
-  const options_weight_volume =
-    formData.radio_buttons === "Объем" ? option_volume : option_weight;
 
   return (
     <Box
@@ -228,10 +268,13 @@ export const FormConverter: React.FC = () => {
         >
           <p>Количество</p>
         </FormLabel>
-        {/* Ввод меры */}
         <Box component="div" display={"flex"}>
+          {/* Ввод числа */}
           <FormControl sx={{ flex: 1 }}>
             <TextField
+              value={formData.number}
+              name="number"
+              onChange={handleNumberChange}
               id="outlined-number"
               label="Введите число"
               type="number"
@@ -248,13 +291,23 @@ export const FormConverter: React.FC = () => {
               }}
             />
           </FormControl>
+          {/* Ввод меры */}
           <FormControl
             sx={{ flex: 1, marginLeft: "20px", ...FormControlStyles }}
           >
             <Autocomplete
+              value={
+                options_weight_volume.find(
+                  (option) => option.label === formData.measure_number
+                ) || null
+              }
+              isOptionEqualToValue={(option, value) =>
+                option.value === value.value
+              }
               disablePortal
-              id="product"
+              id="measure_number"
               options={options_weight_volume}
+              onChange={handleMeasureNumberChange}
               sx={outlinedInputStyles}
               renderInput={(params) => {
                 return (
@@ -291,7 +344,14 @@ export const FormConverter: React.FC = () => {
           <p>Во что пересчитать</p>
         </FormLabel>
         <Autocomplete
+          value={
+            option_measure.find(
+              (option) => option.label === formData.measure
+            ) || null
+          }
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           disablePortal
+          onChange={handleMeasureChange}
           id="measure"
           options={option_measure}
           sx={outlinedInputStyles}

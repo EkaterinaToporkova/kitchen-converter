@@ -5,6 +5,7 @@ import { ArrowDownIcon, RadioButtinIcon } from "../../icons";
 import styles from "./FormConverter.module.css";
 import { InputCountParametr, outlinedInputStyles } from "./FormConverterStyle";
 import { FormControlStyles } from "./FormConverterStyle";
+import { IoMdClose } from "react-icons/io";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,27 +20,31 @@ import products from "../../../data/products.json";
 import measure from "../../../data/measure.json";
 import weight from "../../../data/weight.json";
 import volume from "../../../data/volume.json";
+import densityTable from "../../../data/densityTable.json";
+import units from "../../../data/units.json";
 
 export const FormConverter: React.FC = () => {
-  // const [someState, setSomeState] = useState<number>(0);
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSomeState(Number(e.target.value));
-  // };
-
   interface FormData {
+    products_value: string;
     products: string; // Значение автодополнения может быть объектом или null
     radio_buttons: string; // Значение радиокнопок
     number: string; // Ввод числа
-    measure_number: string;
+    measure_input: string;
+    measure_input_value: string;
     measure: string;
+    measure_value: string;
+
   }
 
   const [formData, setFormData] = React.useState<FormData>({
+    products_value: "",
     products: "",
     radio_buttons: "",
     number: "",
-    measure_number: "",
+    measure_input: "",
+    measure_input_value: "",
     measure: "",
+    measure_value: ""
   });
 
   // ПОЛЕ «ПРОДУКТ»
@@ -63,35 +68,42 @@ export const FormConverter: React.FC = () => {
     event: React.SyntheticEvent,
     newValue: ProductOption | null
   ) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       products: newValue ? newValue.label : "",
-    });
+      products_value: newValue ? newValue.value : "Ошибка расчета",
+    }));
   };
 
   //  ПОЛЕ «ПАРАМЕТР ИЗМЕРЕНИЯ»
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       radio_buttons: event.target.value,
-    });
+    }));
   };
 
   // ПОЛЕ «ВВЕДИТЕ ЧИСЛО»
   const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       number: event.target.value,
-    });
+    }));
   };
 
   // ПОЛЕ «МЕРА»
 
   // 1. Получение списка продуктов
-  const option_weight = Object.entries(weight).map(([value, label]) => ({
-    value,
-    label,
-  }));
+  interface OptionWeight {
+    value: string;
+    label: string;
+  }
+  const option_weight: OptionWeight[] = Object.entries(weight).map(
+    ([value, label]) => ({
+      value,
+      label,
+    })
+  );
 
   const option_volume = Object.entries(volume).map(([value, label]) => ({
     value,
@@ -106,15 +118,16 @@ export const FormConverter: React.FC = () => {
     value: string;
     label: string;
   }
-  // Обработчик
+  // 3. Обработчик
   const handleMeasureNumberChange = (
     event: React.SyntheticEvent,
     newValue: MeasureNumberOption | null
   ) => {
-    setFormData({
-      ...formData,
-      measure_number: newValue ? newValue.label : "",
-    });
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      measure_input: newValue ? newValue.label : "",
+      measure_input_value: newValue ? newValue.value : "",
+    }));
   };
 
   // ПОЛЕ «МЕРА ИЛИ МЕРНЫЙ ПРЕДМЕТ
@@ -132,15 +145,64 @@ export const FormConverter: React.FC = () => {
     event: React.SyntheticEvent,
     newValue: MeasureOption | null
   ) => {
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       measure: newValue ? newValue.label : "",
-    });
+      measure_value: newValue ? newValue.value : ""
+
+    }));
   };
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Состояние для вывода расчета
+
+  // const option_units = Object.entries(units).map(([value, label]) => ({
+  //   value,
+  //   label,
+  // }));
+
+  const [outputAmount, setOutputAmount] = React.useState<number | null>(null);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData);
+    console.log(formData)
+
+    // Плотность продукта
+    const density =
+      densityTable[formData.products_value as keyof typeof densityTable];
+
+    // Ввод числа
+    const amount = parseFloat(formData.number);
+
+    // Ввод меры для расчета
+    const unit = units[formData.measure_value as keyof typeof units];
+    console.log(unit)
+    
+
+    const conversionType =
+      formData.measure_input === formData.measure
+        ? amount * unit 
+        : formData.radio_buttons === "Объем"
+        ? amount * density
+        : (amount * density) / unit;
+
+    // const output = conversionType / unit;
+
+    console.log(conversionType);
+
+    // Ввод меры
+  };
+
+  const handleReset = () => {
+    setFormData({
+      products_value: "",
+      products: "",
+      radio_buttons: "",
+      number: "",
+      measure_input: "",
+      measure_input_value: "",
+      measure: "",
+      measure_value: ""
+    });
   };
 
   return (
@@ -148,6 +210,7 @@ export const FormConverter: React.FC = () => {
       component="form"
       onSubmit={handleSubmit}
       className={styles.fields_input}
+      id="form"
     >
       {/* Продукт */}
       <FormControl fullWidth sx={FormControlStyles}>
@@ -256,7 +319,6 @@ export const FormConverter: React.FC = () => {
       </FormControl>
       {/* Количество */}
       <Box component="div" height={"95px"} sx={InputCountParametr}>
-        {/* Ввод числа */}
         <FormLabel
           component="legend"
           sx={{
@@ -279,6 +341,7 @@ export const FormConverter: React.FC = () => {
               label="Введите число"
               type="number"
               sx={outlinedInputStyles}
+              inputProps={{ min: 0.01, step: 0.01 }}
               InputLabelProps={{
                 sx: {
                   "&.MuiInputLabel-shrink": {
@@ -298,14 +361,14 @@ export const FormConverter: React.FC = () => {
             <Autocomplete
               value={
                 options_weight_volume.find(
-                  (option) => option.label === formData.measure_number
+                  (option) => option.label === formData.measure_input
                 ) || null
               }
               isOptionEqualToValue={(option, value) =>
                 option.value === value.value
               }
               disablePortal
-              id="measure_number"
+              id="measure_input"
               options={options_weight_volume}
               onChange={handleMeasureNumberChange}
               sx={outlinedInputStyles}
@@ -377,7 +440,19 @@ export const FormConverter: React.FC = () => {
           popupIcon={<ArrowDownIcon color="#779D77" />}
         />
       </FormControl>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          startIcon={<IoMdClose color="#779D77" />}
+          type="reset"
+          onClick={handleReset}
+          sx={{
+            color: "#779D77",
+            padding: 0,
+            ":hover": { borderColor: "#8BB88B", backgroundColor: "#0000" },
+          }}
+        >
+          Сбросить
+        </Button>
         <Button
           variant="contained"
           type="submit"

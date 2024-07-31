@@ -1,0 +1,11 @@
+{
+    "gram": 1,
+    "kilogram": 1000,
+    "liter": 1000,
+    "milliliter": 1,
+    "glass_200": 200,
+    "tablespoon": 15,
+    "ounce": 28.3495,
+    "pound": 456.592,
+    "teaspoon": 5
+}

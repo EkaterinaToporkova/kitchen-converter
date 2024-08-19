@@ -23,19 +23,38 @@ import volume from "../../../data/volume.json";
 import densityTable from "../../../data/densityTable.json";
 import units from "../../../data/units.json";
 
-export const FormConverter: React.FC = () => {
-  interface FormData {
-    products_value: string;
-    products: string; // Значение автодополнения может быть объектом или null
-    radio_buttons: string; // Значение радиокнопок
-    number: string; // Ввод числа
-    measure_input: string;
-    measure_input_value: string;
-    measure: string;
-    measure_value: string;
+interface FormData {
+  products_value: string;
+  products: string;
+  radio_buttons: string;
+  number: string;
+  measure_input: string;
+  measure_input_value: string;
+  measure: string;
+  measure_value: string;
+}
 
-  }
+interface FormConverterProps {
+  onConversion: (value: number | null) => void;
+}
 
+interface ProductOption {
+  value: string;
+  label: string;
+}
+
+interface MeasureNumberOption {
+  value: string;
+  label: string;
+}
+
+interface MeasureOption {
+  value: string;
+  label: string;
+}
+export const FormConverter: React.FC<FormConverterProps> = ({
+  onConversion,
+}) => {
   const [formData, setFormData] = React.useState<FormData>({
     products_value: "",
     products: "",
@@ -44,17 +63,12 @@ export const FormConverter: React.FC = () => {
     measure_input: "",
     measure_input_value: "",
     measure: "",
-    measure_value: ""
+    measure_value: "",
   });
 
   // ПОЛЕ «ПРОДУКТ»
-  // 1. Описание интерфейса для поля «Продукт»
-  interface ProductOption {
-    value: string;
-    label: string;
-  }
 
-  // 2. Получение списка продуктов для поля «Продукт»
+  // 1. Получение списка продуктов для поля «Продукт»
   const option_products: ProductOption[] = Object.entries(products).map(
     ([value, label]) => ({
       value,
@@ -62,7 +76,7 @@ export const FormConverter: React.FC = () => {
     })
   );
 
-  // 3. Обработчик
+  // 2. Обработчик
 
   const handleAutocompleteChange = (
     event: React.SyntheticEvent,
@@ -93,17 +107,10 @@ export const FormConverter: React.FC = () => {
 
   // ПОЛЕ «МЕРА»
 
-  // 1. Получение списка продуктов
-  interface OptionWeight {
-    value: string;
-    label: string;
-  }
-  const option_weight: OptionWeight[] = Object.entries(weight).map(
-    ([value, label]) => ({
-      value,
-      label,
-    })
-  );
+  const option_weight = Object.entries(weight).map(([value, label]) => ({
+    value,
+    label,
+  }));
 
   const option_volume = Object.entries(volume).map(([value, label]) => ({
     value,
@@ -113,12 +120,6 @@ export const FormConverter: React.FC = () => {
   const options_weight_volume =
     formData.radio_buttons === "Объем" ? option_volume : option_weight;
 
-  // 2. Описание интерфейса поля «Мера»
-  interface MeasureNumberOption {
-    value: string;
-    label: string;
-  }
-  // 3. Обработчик
   const handleMeasureNumberChange = (
     event: React.SyntheticEvent,
     newValue: MeasureNumberOption | null
@@ -136,11 +137,6 @@ export const FormConverter: React.FC = () => {
     label,
   }));
 
-  interface MeasureOption {
-    value: string;
-    label: string;
-  }
-
   const handleMeasureChange = (
     event: React.SyntheticEvent,
     newValue: MeasureOption | null
@@ -148,23 +144,14 @@ export const FormConverter: React.FC = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       measure: newValue ? newValue.label : "",
-      measure_value: newValue ? newValue.value : ""
-
+      measure_value: newValue ? newValue.value : "",
     }));
   };
 
   // Состояние для вывода расчета
 
-  // const option_units = Object.entries(units).map(([value, label]) => ({
-  //   value,
-  //   label,
-  // }));
-
-  const [outputAmount, setOutputAmount] = React.useState<number | null>(null);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(formData)
 
     // Плотность продукта
     const density =
@@ -173,23 +160,17 @@ export const FormConverter: React.FC = () => {
     // Ввод числа
     const amount = parseFloat(formData.number);
 
-    // Ввод меры для расчета
-    const unit = units[formData.measure_value as keyof typeof units];
-    console.log(unit)
-    
-
     const conversionType =
-      formData.measure_input === formData.measure
-        ? amount * unit 
-        : formData.radio_buttons === "Объем"
-        ? amount * density
-        : (amount * density) / unit;
+      // 1 условие: если значение поля «Параметр измерения» == объем (formData.radio_buttons == «Объем») и значение поля «Мера или мерный продукт» входит в массив option_volume_label,
+      // то base_value = quantity * conversion_table[from_unit]  # Преобразуем в миллилитры
+      // return base_value / conversion_table[to_unit]  # Преобразуем из миллилитров в целевую единицу
+      formData.radio_buttons === "Объем" &&
+      option_volume.some((e) => e.value === formData.measure_value)
+        ? (amount * units[formData.measure_input_value as keyof typeof units]) /
+          units[formData.measure_value as keyof typeof units]
+        : 6;
 
-    // const output = conversionType / unit;
-
-    console.log(conversionType);
-
-    // Ввод меры
+    onConversion(conversionType);
   };
 
   const handleReset = () => {
@@ -201,7 +182,7 @@ export const FormConverter: React.FC = () => {
       measure_input: "",
       measure_input_value: "",
       measure: "",
-      measure_value: ""
+      measure_value: "",
     });
   };
 
@@ -465,6 +446,9 @@ export const FormConverter: React.FC = () => {
           Рассчитать
         </Button>
       </Box>
+      {/* <div className={styles.result}>
+        <p>{outputAmount}</p>
+      </div> */}
     </Box>
   );
 };

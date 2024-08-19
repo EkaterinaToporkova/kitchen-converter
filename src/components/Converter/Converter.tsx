@@ -2,9 +2,12 @@ import styles from "./Converter.module.css";
 import classnames from "classnames";
 import React from "react";
 import { FormConverter } from "./FormConverter/FormConverter";
-import ResultDisplay from "./ResultDisplay";
 
-export const Converter: React.FC = () => {
+interface ResultDisplayProps {
+  outputAmount: number | null;
+}
+
+export const Converter: React.FC<ResultDisplayProps>  = () => {
   const [outputAmount, setOutputAmount] = React.useState<number | null>(null);
   const handleConversion = (value: number | null) => {
     setOutputAmount(value);
@@ -16,7 +19,9 @@ export const Converter: React.FC = () => {
       <div className={classnames(styles.form_calculator, "shadow_content")}>
         <FormConverter onConversion={handleConversion}/>
       </div>
-      <ResultDisplay outputAmount={outputAmount} />
+      <div className={classnames(styles.result, "shadow_content")}>
+        <p>{outputAmount}</p>
+      </div>
     </div>
   );
 };

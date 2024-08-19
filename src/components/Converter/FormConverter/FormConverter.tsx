@@ -157,20 +157,35 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     const density =
       densityTable[formData.products_value as keyof typeof densityTable];
 
+    const fromUnit = units[formData.measure_input_value as keyof typeof units];
+    const toUnit = units[formData.measure_value as keyof typeof units];
+
     // Ввод числа
     const amount = parseFloat(formData.number);
 
+    // 1 условие: если значение поля «Параметр измерения» == объем (formData.radio_buttons == «Объем») и значение поля «Мера или мерный продукт» входит в массив option_volume,
+    // то base_value = quantity * conversion_table[from_unit]  # Преобразуем в миллилитры
+    // return base_value / conversion_table[to_unit]  # Преобразуем из миллилитров в целевую единицу
+    // 2 условие: если значение поля formData.radio_buttons == Вес и значение поля «Мера или мерный продукт» входит в массив option_weight
+    // 3 условие: если конвертация из массы в объемом
+    // 4 условие: если конвертация из объем в массу
+    
     const conversionType =
-      // 1 условие: если значение поля «Параметр измерения» == объем (formData.radio_buttons == «Объем») и значение поля «Мера или мерный продукт» входит в массив option_volume_label,
-      // то base_value = quantity * conversion_table[from_unit]  # Преобразуем в миллилитры
-      // return base_value / conversion_table[to_unit]  # Преобразуем из миллилитров в целевую единицу
-      formData.radio_buttons === "Объем" &&
-      option_volume.some((e) => e.value === formData.measure_value)
-        ? (amount * units[formData.measure_input_value as keyof typeof units]) /
-          units[formData.measure_value as keyof typeof units]
-        : 6;
+      (formData.radio_buttons === "Объем" &&
+        option_volume.some((e) => e.value === formData.measure_value)) ||
+      (formData.radio_buttons === "Вес" &&
+        option_weight.some((e) => e.value === formData.measure_value))
+        ? (amount * fromUnit) / toUnit
+        : formData.radio_buttons === "Вес" &&
+          option_volume.some((e) => e.value === formData.measure_value)
+        ? (amount * fromUnit) / density / toUnit
+        : formData.radio_buttons === "Объем" &&
+          option_weight.some((e) => e.value === formData.measure_value)
+        ? (amount * fromUnit * density) / toUnit
+        : 0;
 
-    onConversion(conversionType);
+    const resultConversetion = Math.round(conversionType * 100) / 100;
+    onConversion(resultConversetion);
   };
 
   const handleReset = () => {

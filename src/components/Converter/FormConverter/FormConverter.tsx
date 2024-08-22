@@ -35,7 +35,8 @@ interface FormData {
 }
 
 interface FormConverterProps {
-  onConversion: (value: number | null) => void;
+  onConversion: (value: number | 0) => void;
+  onReset: () => void;
 }
 
 interface ProductOption {
@@ -54,6 +55,7 @@ interface MeasureOption {
 }
 export const FormConverter: React.FC<FormConverterProps> = ({
   onConversion,
+  onReset,
 }) => {
   const [formData, setFormData] = React.useState<FormData>({
     products_value: "",
@@ -169,7 +171,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     // 2 условие: если значение поля formData.radio_buttons == Вес и значение поля «Мера или мерный продукт» входит в массив option_weight
     // 3 условие: если конвертация из массы в объемом
     // 4 условие: если конвертация из объем в массу
-    
+
     const conversionType =
       (formData.radio_buttons === "Объем" &&
         option_volume.some((e) => e.value === formData.measure_value)) ||
@@ -188,7 +190,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     onConversion(resultConversetion);
   };
 
-  const handleReset = () => {
+  const handleReset  = () => {
+    onReset(),
     setFormData({
       products_value: "",
       products: "",

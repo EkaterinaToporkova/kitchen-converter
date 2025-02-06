@@ -1,36 +1,33 @@
-import React from 'react';
-import styles from './Header.module.css'
-import logo from  '../../assets/icon/logo.svg'
+import React from "react";
+import styles from "./Header.module.css";
+import classnames from "classnames";
 
-export const Header : React.FC = () => {
-    return (
-        <header className={styles.header}>
-        <div className="container">
-          <div className={styles.wrapper}>
-            <div className={styles.logo}>
-                <img src={logo} alt="Логотип" loading="lazy" />
-              <p>Перевод мер и весов для кулинарных рецептов</p>
-            </div>
-            <nav className={styles.header__nav}>
-              <ul className={styles.header__list}>
-                <li>
-                  <a className={styles.active} href="#!">
-                    Конвертер
-                  </a>
-                </li>
-                <li>
-                  <a href="#!">Для чего</a>
-                </li>
-                <li>
-                  <a href="#!">Контакты</a>
-                </li>
-                <li>
-                  <a href="#!">FAQ</a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-          </div>  
-      </header>
-    )
-}
+
+
+export const Header: React.FC = () => {
+  return (
+    <header className={styles.header}>
+      <div className={classnames(styles.header__container, "_container")}>
+          <a href="#" className={styles.header__logo}>Kitchen Converter</a> 
+          <nav className={classnames(styles.header__menu, styles.menu)}>
+            <ul className={styles.menu__list}>
+              <li className={styles.menu__item}>
+                <a href="#!" className={styles.menu__link}>
+                  Конвертер
+                </a>
+              </li>
+              <li className={styles.menu__item}>
+                <a href="#!" className={styles.menu__link}>Для чего</a>
+              </li>
+              <li className={styles.menu__item}>
+                <a href="#!" className={styles.menu__link}>Контакты</a>
+              </li>
+              <li className={styles.menu__item}>
+                <a href="#!" className={styles.menu__link}>FAQ</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+    </header>
+  );
+};

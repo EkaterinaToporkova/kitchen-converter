@@ -8,7 +8,6 @@ export const History : React.FC = () => {
     return (
         <div className={styles.history_content}>
                 <div className={styles.history}>
-                <img src={tape} alt="Tape" className={styles.overlay__image}/>
                   <h4>История</h4>
                   <ul className={styles.history__items}>
                     <li className={styles.history__item}>

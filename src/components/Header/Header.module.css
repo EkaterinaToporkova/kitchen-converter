@@ -1,10 +1,11 @@
+
 .header {
   position: absolute;
   width: 100%;
   left: 0;
   top: 0;
   z-index: 50;
-  background-color: #779d77;
+  /* background-color: #779d77; */
 }
 
 .header__container {
@@ -19,11 +20,9 @@
   font-family: "Prosto One", sans-serif;
   font-size: 24px;
   font-weight: 700;
-  color: #ffffff;
+  color: #779D77;
 }
 
-.header__menu {
-}
 
 @media (max-width:767px) {
   .header__menu {
@@ -47,8 +46,6 @@
   flex-wrap: wrap;
 }
 
-.menu__item {
-}
 
 .menu__item:not(:last-child) {
   margin: 0px 40px 0px 0px;
@@ -58,7 +55,7 @@
   line-height: calc(24 / 14 * 100%);
   font-weight: 500;
   font-size: 14px;
-  color: #ffffff;
+  color: #779D77;
 }
 
 @media (max-width:479px) {

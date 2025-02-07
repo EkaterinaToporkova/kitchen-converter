@@ -19,7 +19,7 @@ export const Converter: React.FC<ResultDisplayProps>  = () => {
 
   return (
     <div className={styles.calculator}>
-      <h3 className={styles.wrapper_title}>Расчет</h3>
+      {/* <h3 className={styles.wrapper_title}>Расчет</h3> */}
       <div className={classnames(styles.form_calculator, "shadow_content")}>
         <FormConverter onConversion={handleConversion} onReset={handleReset} />
       </div>

@@ -464,9 +464,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
           Рассчитать
         </Button>
       </Box>
-      {/* <div className={styles.result}>
-        <p>{outputAmount}</p>
-      </div> */}
     </Box>
   );
 };

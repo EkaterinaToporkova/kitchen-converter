@@ -1,31 +1,15 @@
 
-.history_content {
-    flex-grow: 1;
-    background-image: url(../../assets/images/food.png);
-    background-repeat: no-repeat;
-    background-position: bottom;
-    background-size: contain;
-    max-width: 600px;
-    height: 800px;
-  }
   
   .history {
     display: inline-block;
     background-color: #faf8e5;
     padding: 30px;
     box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
-    margin-top: 71px;
+    /* margin-top: 71px; */
     position: relative; 
     
   }
 
-  .overlay__image {
-    position: absolute;
-    top: -15px;
-    left: 250px;
-    z-index: 10; 
-    pointer-events: none; /* Чтобы изображение не мешало взаимодействию с другими элементами */
-  }
   
   .history h4 {
     margin: 0 0 20px;

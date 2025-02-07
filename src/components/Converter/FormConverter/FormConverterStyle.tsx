@@ -1,4 +1,3 @@
-// import { alignProperty } from "@mui/material/styles/cssUtils";
 
 // Cтиль для ширины между текстом и полем + стиль для поля
 export const outlinedInputStyles = {

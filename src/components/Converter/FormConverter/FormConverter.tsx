@@ -37,6 +37,7 @@ interface FormData {
 interface FormConverterProps {
   onConversion: (value: number | 0) => void;
   onReset: () => void;
+  dispatch: React.Dispatch<any>;
 }
 
 interface ProductOption {
@@ -53,9 +54,11 @@ interface MeasureOption {
   value: string;
   label: string;
 }
+
 export const FormConverter: React.FC<FormConverterProps> = ({
   onConversion,
   onReset,
+  dispatch,
 }) => {
   const [formData, setFormData] = React.useState<FormData>({
     products_value: "",
@@ -78,7 +81,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     })
   );
 
-  // 2. Обработчик
+  // 2. ПОЛЕ «ПРОДУКТ»
 
   const handleAutocompleteChange = (
     event: React.SyntheticEvent,
@@ -154,6 +157,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    dispatch({ type: "add", ...formData });
 
     // Плотность продукта
     const density =
@@ -190,18 +194,18 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     onConversion(resultConversetion);
   };
 
-  const handleReset  = () => {
+  const handleReset = () => {
     onReset(),
-    setFormData({
-      products_value: "",
-      products: "",
-      radio_buttons: "",
-      number: "",
-      measure_input: "",
-      measure_input_value: "",
-      measure: "",
-      measure_value: "",
-    });
+      setFormData({
+        products_value: "",
+        products: "",
+        radio_buttons: "",
+        number: "",
+        measure_input: "",
+        measure_input_value: "",
+        measure: "",
+        measure_value: "",
+      });
   };
 
   return (

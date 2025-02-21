@@ -117,16 +117,4 @@ body {
   border-radius: 12px;
 }
 
-.reset__btn {
-  width: 301px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
 
-.reset__btn input[type="reset"] {
-  background-color: transparent;
-  border: none;
-  padding: 0px;
-  color: #779d77;
-}

@@ -71,6 +71,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     measure_value: "",
   });
 
+  console.log(formData)
+
   // ПОЛЕ «ПРОДУКТ»
 
   // 1. Получение списка продуктов для поля «Продукт»

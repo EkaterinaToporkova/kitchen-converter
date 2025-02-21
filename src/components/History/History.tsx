@@ -1,6 +1,5 @@
 import styles from "./History.module.css";
 import close from "../../assets/icon/close.svg";
-import RussianNouns from "russian-nouns-js";
 // import tape from "../../assets/icon/tape.svg"
 // import { Converter } from "../Converter/Converter";
 
@@ -16,56 +15,63 @@ interface HistoryProps {
   boundDeleteHistoryItem: (id: number) => void;
 }
 
-const rne = new RussianNouns.Engine();
-const Gender = RussianNouns.Gender;
-const Case = RussianNouns.Case;
+const measureAbbreviations: Record<string, string> = {
+  "стакан 200 мл": "ст. 200 мл.",
+  миллилитр: "мл.",
+  грамм: "гр.",
+  килограмм: "кг.",
+  литр: "л.",
+  "столовая ложка": "ст. л.",
+  унция: "унц.",
+  фунт: "ф.",
+  "чайная ложка": "ч. л.",
+};
+
+const abbreviateMeasureFrom = (measure_input: string): string => {
+  return measureAbbreviations[measure_input.toLowerCase()] || measure_input;
+};
+
+const abbreviateMeasureTo = (measure: string): string => {
+  return measureAbbreviations[measure.toLowerCase()] || measure;
+};
 
 export const History: React.FC<HistoryProps> = ({
   histories,
   boundDeleteHistoryItem,
 }) => {
-  const declineWord = (word: string, gender: string, number: number) => {
-    const lemma = RussianNouns.createLemma({ text: word, gender });
-
-    // Если число 1, то именительный падеж
-    if (number === 1) return word;
-
-    // Если число 2, 3, 4 – родительный падеж единственного числа
-    if (number >= 2 && number <= 4) return rne.decline(lemma, Case.GENITIVE)[0];
-
-    // Если число 5 и больше – родительный падеж множественного числа
-    return rne.pluralize(lemma)[0];
-  };
+  console.log(histories);
   return (
     <div className={styles.history_content}>
       <div className={styles.history}>
         <h4>История</h4>
-        <ul className={styles.history__items}>
+        <ul className={styles.history_items}>
           {histories.map((history) => {
-            const measure = declineWord(
-              history.measure_input,
-              Gender.NEUTER,
-              history.number
+            const abbreviatedMeasureInput = abbreviateMeasureFrom(
+              history.measure_input.toLowerCase()
             );
-            const product = declineWord(
-              history.products,
-              Gender.MASCULINE,
-              history.number
+            const abbreviatedMeasure = abbreviateMeasureTo(
+              history.measure.toLowerCase()
             );
-
             return (
-              <li
-                key={history.id}
-                className={styles.history__item}
-                onClick={() => boundDeleteHistoryItem(history.id)}
-              >
-                {history.number} {measure} {product}
+              <li className={styles.history_item}>
+                <span className={styles.history_text}>
+                  {" "}
+                  {history.products} {history.number} {abbreviatedMeasureInput}{" "}
+                  = 1,5 {abbreviatedMeasure}
+                </span>
+                <img
+                  className={styles.history_img}
+                  key={history.id}
+                  onClick={() => boundDeleteHistoryItem(history.id)}
+                  src={close}
+                  alt="Удалить"
+                />
               </li>
             );
           })}
         </ul>
-        <div className="reset__btn">
-          <img src={close} alt="" />
+        <div className={styles.reset_btn}>
+          <img src={close} alt="Удалить" />
           <input type="reset" value="Очистить историю" id="reset-history" />
         </div>
       </div>

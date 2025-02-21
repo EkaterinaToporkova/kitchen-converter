@@ -1,23 +1,54 @@
+.history {
+  display: inline-block;
+  background-color: #faf8e5;
+  padding: 30px;
+  box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
+  /* margin-top: 71px; */
+  position: relative;
+}
 
-  
-  .history {
-    display: inline-block;
-    background-color: #faf8e5;
-    padding: 30px;
-    box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
-    /* margin-top: 71px; */
-    position: relative; 
-    
-  }
+.history h4 {
+  margin: 0 0 20px;
+  font-size: 20px;
+  font-weight: 500;
+}
 
-  
-  .history h4 {
-    margin: 0 0 20px;
-    font-size: 20px;
-    font-weight: 500;
-  }
-  
-  .history__item {
-    margin-bottom: 20px;
-  }
-  
+.history_item {
+  margin-bottom: 20px;
+  position: relative;
+  padding-right: 30px;
+  display: block;
+  width: 100%;
+}
+
+.history_img {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  cursor: pointer;
+}
+
+.history_item:hover .history_img {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reset_btn {
+  width: 301px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.reset_btn input[type="reset"] {
+  background-color: transparent;
+  border: none;
+  padding: 0px;
+  color: #779d77;
+  cursor: pointer;
+}

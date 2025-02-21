@@ -26,6 +26,7 @@ interface Action {
 const reducer = (state: HistoryItem[], action: Action) => {
   switch (action.type) {
     case "add": {
+      console.log(action)
       return [{ ...action, id: Date.now() }, ...state];
     }
     case DELETE_HISTORY_ITEM: {

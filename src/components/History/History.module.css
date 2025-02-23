@@ -1,19 +1,20 @@
-.history {
+.history__panel {
   display: inline-block;
   background-color: #faf8e5;
   padding: 30px;
   box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
-  /* margin-top: 71px; */
   position: relative;
+  width: 400px;
+  min-height: 310px;
 }
 
-.history h4 {
+.history__title {
   margin: 0 0 20px;
   font-size: 20px;
   font-weight: 500;
 }
 
-.history_item {
+.history__item {
   margin-bottom: 20px;
   position: relative;
   padding-right: 30px;
@@ -21,7 +22,7 @@
   width: 100%;
 }
 
-.history_img {
+.history__deleteBtn {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -32,20 +33,21 @@
   cursor: pointer;
 }
 
-.history_item:hover .history_img {
+.history__item:hover .history__deleteBtn {
   opacity: 1;
   pointer-events: auto;
 }
 
-.reset_btn {
-  width: 301px;
+.history__reset {
+  position: absolute;  
+  left: 30px;
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
 }
 
-.reset_btn input[type="reset"] {
+.history__resetBtn {
   background-color: transparent;
   border: none;
   padding: 0px;

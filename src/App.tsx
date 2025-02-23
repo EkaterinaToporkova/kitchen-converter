@@ -8,6 +8,8 @@ import classnames from "classnames";
 //dispatch({ type: "delete", id: history.id })
 
 const DELETE_HISTORY_ITEM = "DELETE_HISTORY_ITEM";
+const RESET_HISTORY = "RESET_HISTORY";
+const ADD_HISTORY_ITEM = "ADD_HISTORY_ITEM";
 
 interface HistoryItem {
   id: number;
@@ -17,20 +19,36 @@ interface HistoryItem {
 
 interface Action {
   type: string;
-  id?: number;
+  payload?: any;
   // Добавьте другие свойства, если они есть
+}
+
+export interface BoundAddHistoryItemParams {
+  id: number;
+  measure: string;
+  measure_input: string;
+  measure_input_value: string;
+  measure_value: string;
+  number: string;
+  products: string;
+  products_value: string;
+  radio_buttons: string;
+  resultConversetion: number;
 }
 
 // Состояние для отображения в истории
 
 const reducer = (state: HistoryItem[], action: Action) => {
   switch (action.type) {
-    case "add": {
-      console.log(action)
-      return [{ ...action, id: Date.now() }, ...state];
+    case ADD_HISTORY_ITEM: {
+      return [{ ...action.payload, id: Date.now() }, ...state];
+    }
+
+    case RESET_HISTORY: {
+      return [];
     }
     case DELETE_HISTORY_ITEM: {
-      return state.filter((history) => history.id !== action.id);
+      return state.filter((history) => history.id !== action.payload.id);
     }
     default:
       return [];
@@ -38,11 +56,24 @@ const reducer = (state: HistoryItem[], action: Action) => {
 };
 
 const App: React.FC = () => {
-  const [histories, dispatch] = React.useReducer(reducer, []);
+  const [histories, dispatch] = React.useReducer(
+    reducer,
+    [] as { id: number }[]
+  );
 
   const boundDeleteHistoryItem = (id: number) => {
-    const action = { type: DELETE_HISTORY_ITEM, id };
+    const action = { type: DELETE_HISTORY_ITEM, payload: { id } };
     dispatch(action);
+  };
+
+  const boundResetHistory = () => {
+    const action = { type: RESET_HISTORY };
+    dispatch(action);
+  };
+
+  const boundAddHistoryItem = (params: BoundAddHistoryItemParams) => {
+    const action = { type: ADD_HISTORY_ITEM, payload: { ...params, id: Date.now() } };
+    dispatch(action)
   };
 
   return (
@@ -58,6 +89,8 @@ const App: React.FC = () => {
                   <History
                     histories={histories}
                     boundDeleteHistoryItem={boundDeleteHistoryItem}
+                    boundResetHistory={boundResetHistory}
+                    boundAddHistoryItem = {boundAddHistoryItem}
                   />
                 </div>
               </div>

@@ -71,7 +71,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     measure_value: "",
   });
 
-  console.log(formData)
+  console.log(formData);
 
   // ПОЛЕ «ПРОДУКТ»
 
@@ -159,7 +159,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch({ type: "add", ...formData });
 
     // Плотность продукта
     const density =
@@ -194,6 +193,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
     const resultConversetion = Math.round(conversionType * 100) / 100;
     onConversion(resultConversetion);
+
+    dispatch({ type: "ADD_HISTORY_ITEM", payload: {...formData, resultConversetion} });
   };
 
   const handleReset = () => {

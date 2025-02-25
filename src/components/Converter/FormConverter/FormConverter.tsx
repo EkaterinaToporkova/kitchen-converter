@@ -12,8 +12,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { Box } from "@mui/material";
-// import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Action } from "../../../App";
+import { useForm } from "react-hook-form";
+ 
 
 // Export data
 import products from "../../../data/products.json";
@@ -24,6 +26,7 @@ import densityTable from "../../../data/densityTable.json";
 import units from "../../../data/units.json";
 
 interface FormData {
+  id: number;
   products_value: string;
   products: string;
   radio_buttons: string;
@@ -37,7 +40,7 @@ interface FormData {
 interface FormConverterProps {
   onConversion: (value: number | 0) => void;
   onReset: () => void;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<Action>;
 }
 
 interface ProductOption {
@@ -61,9 +64,10 @@ export const FormConverter: React.FC<FormConverterProps> = ({
   dispatch,
 }) => {
   const [formData, setFormData] = React.useState<FormData>({
+    id: 0,
     products_value: "",
     products: "",
-    radio_buttons: "",
+    radio_buttons: "Объем",
     number: "",
     measure_input: "",
     measure_input_value: "",
@@ -71,7 +75,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     measure_value: "",
   });
 
-  console.log(formData);
 
   // ПОЛЕ «ПРОДУКТ»
 
@@ -194,15 +197,19 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     const resultConversetion = Math.round(conversionType * 100) / 100;
     onConversion(resultConversetion);
 
-    dispatch({ type: "ADD_HISTORY_ITEM", payload: {...formData, resultConversetion} });
+    dispatch({
+      type: "ADD_HISTORY_ITEM",
+      payload: { ...formData, resultConversetion },
+    });
   };
 
   const handleReset = () => {
     onReset(),
       setFormData({
+        id: 0,
         products_value: "",
         products: "",
-        radio_buttons: "",
+        radio_buttons: "Объем",
         number: "",
         measure_input: "",
         measure_input_value: "",
@@ -250,6 +257,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
             return (
               <TextField
                 {...params}
+                required
                 label="Введите или выберите из списка"
                 name="products"
                 InputLabelProps={{
@@ -340,6 +348,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
           {/* Ввод числа */}
           <FormControl sx={{ flex: 1 }}>
             <TextField
+              required
               value={formData.number}
               name="number"
               onChange={handleNumberChange}
@@ -382,6 +391,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                 return (
                   <TextField
                     {...params}
+                    required
                     label="Мера"
                     InputLabelProps={{
                       sx: {
@@ -428,6 +438,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
             return (
               <TextField
                 {...params}
+                required
                 label="Мера или мерный предмет"
                 InputLabelProps={{
                   sx: {

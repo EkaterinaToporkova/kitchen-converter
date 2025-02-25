@@ -1,6 +1,7 @@
 import styles from "./History.module.css";
 import close from "../../assets/icon/close.svg";
-import { BoundAddHistoryItemParams } from "../../App";
+import { BoundAddHistoryItemParams, HistoryItem } from "../../App";
+import React from "react";
 // import tape from "../../assets/icon/tape.svg"
 // import { Converter } from "../Converter/Converter";
 
@@ -11,15 +12,12 @@ import { BoundAddHistoryItemParams } from "../../App";
 // Мера или мерный предмет handleMeasureChange
 // Добавление списка продуктов должно быть с помощью кнопки Рассчитать
 
-
-
 interface HistoryProps {
-  histories: any[];
+  histories: HistoryItem[];
   boundDeleteHistoryItem: (id: number) => void;
   boundResetHistory: () => void;
   boundAddHistoryItem: (params: BoundAddHistoryItemParams) => void;
 }
-
 
 const measureAbbreviations: Record<string, string> = {
   "Стакан 200 мл": "ст. 200 мл.",
@@ -45,9 +43,12 @@ export const History: React.FC<HistoryProps> = ({
   histories,
   boundDeleteHistoryItem,
   boundResetHistory,
-  boundAddHistoryItem
 }) => {
-  console.log(histories)
+  // Логирование при каждом изменении histories
+  React.useEffect(() => {
+    console.log(histories)
+    localStorage.setItem("historylist", JSON.stringify(histories));
+  }, [histories]);
   return (
     <div className={styles.history}>
       <div className={styles.history__panel}>
@@ -57,9 +58,7 @@ export const History: React.FC<HistoryProps> = ({
             const abbreviatedMeasureInput = abbreviateMeasureFrom(
               history.measure_input
             );
-            const abbreviatedMeasure = abbreviateMeasureTo(
-              history.measure
-            );
+            const abbreviatedMeasure = abbreviateMeasureTo(history.measure);
             return (
               <li className={styles.history__item}>
                 <span className={styles.history__text}>
@@ -78,11 +77,24 @@ export const History: React.FC<HistoryProps> = ({
             );
           })}
         </ul>
-        {histories.length > 0 &&
-        <div onClick={()=> boundResetHistory()} className={styles.history__reset}>
-          <img src={close} alt="Удалить" className={styles.history__resetIcn} />
-          <input  type="reset" value="Очистить историю" id="reset-history" className={styles.history__resetBtn}/>
-        </div>}
+        {histories.length > 0 && (
+          <div
+            onClick={() => boundResetHistory()}
+            className={styles.history__reset}
+          >
+            <img
+              src={close}
+              alt="Удалить"
+              className={styles.history__resetIcn}
+            />
+            <input
+              type="reset"
+              value="Очистить историю"
+              id="reset-history"
+              className={styles.history__resetBtn}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

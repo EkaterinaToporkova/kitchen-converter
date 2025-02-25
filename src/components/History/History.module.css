@@ -1,6 +1,6 @@
 .history__panel {
   display: inline-block;
-  background-color: #faf8e5;
+  background-color: rgba(250, 248, 229, 0.9);
   padding: 30px;
   box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
   position: relative;
@@ -39,8 +39,8 @@
 }
 
 .history__reset {
-  position: absolute;  
-  left: 30px;
+  position: absolute;
+  bottom: 20px;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -53,4 +53,5 @@
   padding: 0px;
   color: #779d77;
   cursor: pointer;
+
 }

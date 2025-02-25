@@ -5,23 +5,41 @@ import { History } from "./components/History/History";
 import * as React from "react";
 import classnames from "classnames";
 
-//dispatch({ type: "delete", id: history.id })
+const ADD_HISTORY_ITEM = "ADD_HISTORY_ITEM" as const;
+const DELETE_HISTORY_ITEM = "DELETE_HISTORY_ITEM" as const;
+const RESET_HISTORY = "RESET_HISTORY" as const;
 
-const DELETE_HISTORY_ITEM = "DELETE_HISTORY_ITEM";
-const RESET_HISTORY = "RESET_HISTORY";
-const ADD_HISTORY_ITEM = "ADD_HISTORY_ITEM";
-
-interface HistoryItem {
+export interface HistoryItem {
   id: number;
-  // Добавьте другие свойства, если они есть
-  type?: string; // Например, если action имеет свойство type
+  measure: string;
+  measure_input: string;
+  measure_input_value: string;
+  measure_value: string;
+  number: string;
+  products: string;
+  products_value: string;
+  radio_buttons: string;
+  resultConversetion: number;
+  type?: string;
 }
 
-interface Action {
-  type: string;
-  payload?: any;
-  // Добавьте другие свойства, если они есть
+interface AddHistoryItemAction {
+  type: typeof ADD_HISTORY_ITEM;
+  payload: BoundAddHistoryItemParams;
 }
+
+interface DeleteHistoryItemAction {
+  type: typeof DELETE_HISTORY_ITEM;
+  payload: { id: number };
+}
+
+interface ResetHistoryAction {
+  type: typeof RESET_HISTORY;
+}
+export type Action =
+  | AddHistoryItemAction
+  | DeleteHistoryItemAction
+  | ResetHistoryAction;
 
 export interface BoundAddHistoryItemParams {
   id: number;
@@ -41,7 +59,8 @@ export interface BoundAddHistoryItemParams {
 const reducer = (state: HistoryItem[], action: Action) => {
   switch (action.type) {
     case ADD_HISTORY_ITEM: {
-      return [{ ...action.payload, id: Date.now() }, ...state];
+      const newState = [{ ...action.payload, id: Date.now() }, ...state]
+      return newState.slice(0, 10);
     }
 
     case RESET_HISTORY: {
@@ -51,15 +70,12 @@ const reducer = (state: HistoryItem[], action: Action) => {
       return state.filter((history) => history.id !== action.payload.id);
     }
     default:
-      return [];
+      return state;
   }
 };
 
 const App: React.FC = () => {
-  const [histories, dispatch] = React.useReducer(
-    reducer,
-    [] as { id: number }[]
-  );
+  const [histories, dispatch] = React.useReducer(reducer, JSON.parse(localStorage.getItem("historylist") || "[]") || []  as HistoryItem[]);
 
   const boundDeleteHistoryItem = (id: number) => {
     const action = { type: DELETE_HISTORY_ITEM, payload: { id } };
@@ -72,11 +88,15 @@ const App: React.FC = () => {
   };
 
   const boundAddHistoryItem = (params: BoundAddHistoryItemParams) => {
-    const action = { type: ADD_HISTORY_ITEM, payload: { ...params, id: Date.now() } };
-    dispatch(action)
+    const action = {
+      type: ADD_HISTORY_ITEM,
+      payload: { ...params, id: Date.now() },
+    };
+    dispatch(action);
   };
 
   return (
+
     <>
       <div className="wrapper">
         <Header />
@@ -90,7 +110,7 @@ const App: React.FC = () => {
                     histories={histories}
                     boundDeleteHistoryItem={boundDeleteHistoryItem}
                     boundResetHistory={boundResetHistory}
-                    boundAddHistoryItem = {boundAddHistoryItem}
+                    boundAddHistoryItem={boundAddHistoryItem}
                   />
                 </div>
               </div>

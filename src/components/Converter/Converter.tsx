@@ -2,10 +2,11 @@ import styles from "./Converter.module.css";
 import classnames from "classnames";
 import React from "react";
 import { FormConverter } from "./FormConverter/FormConverter";
+import { Action } from "../../App";
 
 interface ResultDisplayProps {
   outputAmount?: number | 0;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<Action>;
 }
 
 export const Converter: React.FC<ResultDisplayProps> = ({ dispatch }) => {

@@ -63,7 +63,7 @@ export const History: React.FC<HistoryProps> = ({
               <li className={styles.history__item}>
                 <span className={styles.history__text}>
                   {" "}
-                  {history.products} {history.number} {abbreviatedMeasureInput}{" "}
+                  {history.products_ru} {history.number} {abbreviatedMeasureInput}{" "}
                   = {history.resultConversetion} {abbreviatedMeasure}
                 </span>
                 <img

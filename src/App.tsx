@@ -16,7 +16,7 @@ export interface HistoryItem {
   measure_input_value: string;
   measure_value: string;
   number: string;
-  products: string;
+  products_ru: string;
   products_value: string;
   radio_buttons: string;
   resultConversetion: number;
@@ -48,7 +48,7 @@ export interface BoundAddHistoryItemParams {
   measure_input_value: string;
   measure_value: string;
   number: string;
-  products: string;
+  products_ru: string;
   products_value: string;
   radio_buttons: string;
   resultConversetion: number;

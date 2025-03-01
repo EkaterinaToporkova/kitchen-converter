@@ -1,7 +1,7 @@
 import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
-import { ArrowDownIcon, RadioButtinIcon } from "../../icons";
+import { ArrowDownIcon, RadioButtonIcon } from "../../icons";
 import styles from "./FormConverter.module.css";
 import { InputCountParametr, outlinedInputStyles } from "./FormConverterStyle";
 import { FormControlStyles } from "./FormConverterStyle";
@@ -57,6 +57,31 @@ interface MeasureOption {
   label: string;
 }
 
+// Обработчик изменения поля «Продукт»
+const option_products: ProductOption[] = Object.entries(products).map(
+  ([value, label]) => ({
+    value,
+    label,
+  })
+);
+
+// Обработчик изменения поля «Мера»
+const option_weight = Object.entries(weight).map(([value, label]) => ({
+  value,
+  label,
+}));
+
+const option_volume = Object.entries(volume).map(([value, label]) => ({
+  value,
+  label,
+}));
+
+// Обработчик изменения поля «Мера или мерный предмет»
+const option_measure = Object.entries(measure).map(([value, label]) => ({
+  value,
+  label,
+}));
+
 export const FormConverter: React.FC<FormConverterProps> = ({
   onConversion,
   onReset,
@@ -85,16 +110,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
   // ПОЛЕ «ПРОДУКТ»
 
-  // 1. Получение списка продуктов для поля «Продукт»
-  const option_products: ProductOption[] = Object.entries(products).map(
-    ([value, label]) => ({
-      value,
-      label,
-    })
-  );
-  // Отслеживаем значение поля products
-  const productsRuValue = watch("products_ru");
-
   // Обработчик изменения поля «Продукт»
   const handleAutocompleteChange = (
     event: React.SyntheticEvent,
@@ -114,17 +129,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     setValue("number", event.target.value);
   };
 
-  // Обработчик изменения поля «Мера»
-  const option_weight = Object.entries(weight).map(([value, label]) => ({
-    value,
-    label,
-  }));
-
-  const option_volume = Object.entries(volume).map(([value, label]) => ({
-    value,
-    label,
-  }));
-
   const radioButtonsValue = watch("radio_buttons");
 
   const options_weight_volume =
@@ -137,12 +141,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     setValue("measure_input", newValue ? newValue.label : "");
     setValue("measure_input_value", newValue ? newValue.value : "");
   };
-
-  // Обработчик изменения поля «Мера или мерный предмет»
-  const option_measure = Object.entries(measure).map(([value, label]) => ({
-    value,
-    label,
-  }));
 
   const handleMeasureChange = (
     event: React.SyntheticEvent,
@@ -164,21 +162,30 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
   // Обработчик отправки формы
   const onSubmit = (data: FormData) => {
-    const conversionType =
-      (radioButtonsValue === "Объем" &&
-        option_volume.some((e) => e.value === measureValue)) ||
-      (radioButtonsValue === "Вес" &&
-        option_weight.some((e) => e.value === measureValue))
-        ? (amount * fromUnit) / toUnit
-        : radioButtonsValue === "Вес" &&
-          option_volume.some((e) => e.value === measureValue)
-        ? (amount * fromUnit) / density / toUnit
-        : radioButtonsValue === "Объем" &&
-          option_weight.some((e) => e.value === measureValue)
-        ? (amount * fromUnit * density) / toUnit
-        : 0;
+    const isVolumeCorrect =
+      radioButtonsValue === "Объем" &&
+      option_volume.some((e) => e.value === measureValue);
+    const isWeightCorrect =
+      radioButtonsValue === "Вес" &&
+      option_weight.some((e) => e.value === measureValue);
+    const isWeightToVolume =
+      radioButtonsValue === "Вес" &&
+      option_volume.some((e) => e.value === measureValue);
+    const isVolumeToWeight =
+      radioButtonsValue === "Объем" &&
+      option_weight.some((e) => e.value === measureValue);
 
-    const resultConversetion = Math.round(conversionType * 100) / 100;
+    let conversionResult = 0;
+
+    if (isVolumeCorrect || isWeightCorrect) {
+      conversionResult = (amount * fromUnit) / toUnit;
+    } else if (isWeightToVolume) {
+      conversionResult = (amount * fromUnit) / density / toUnit;
+    } else if (isVolumeToWeight) {
+      conversionResult = (amount * fromUnit * density) / toUnit;
+    }
+
+    const resultConversetion = Math.round(conversionResult * 100) / 100;
     onConversion(resultConversetion);
     dispatch({
       type: "ADD_HISTORY_ITEM",
@@ -312,7 +319,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                       color: "#779D77",
                       "& .MuiSvgIcon-root": { fontSize: "20px" },
                     }}
-                    checkedIcon={<RadioButtinIcon color="#779D77" size={20} />}
+                    checkedIcon={<RadioButtonIcon color="#779D77" size={20} />}
                   />
                 }
               />
@@ -325,7 +332,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                       color: "#779D77",
                       "& .MuiSvgIcon-root": { fontSize: "20px" },
                     }}
-                    checkedIcon={<RadioButtinIcon color="#779D77" size={20} />}
+                    checkedIcon={<RadioButtonIcon color="#779D77" size={20} />}
                   />
                 }
               />

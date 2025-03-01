@@ -15,6 +15,7 @@ import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Action } from "../../../App";
 import { useForm, Controller } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 
 // Export data
 import products from "../../../data/products.json";
@@ -57,6 +58,18 @@ interface MeasureOption {
   label: string;
 }
 
+const defaultValues: FormData = {
+  id: 0,
+  products_value: "",
+  products_ru: "",
+  radio_buttons: "Объем",
+  number: "",
+  measure_input: "",
+  measure_input_value: "",
+  measure: "",
+  measure_value: "",
+};
+
 // Обработчик изменения поля «Продукт»
 const option_products: ProductOption[] = Object.entries(products).map(
   ([value, label]) => ({
@@ -95,17 +108,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     control,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      id: 0,
-      products_value: "",
-      products_ru: "",
-      radio_buttons: "Объем",
-      number: "",
-      measure_input: "",
-      measure_input_value: "",
-      measure: "",
-      measure_value: "",
-    },
+    defaultValues,
+    mode: "onSubmit",
   });
 
   // ПОЛЕ «ПРОДУКТ»
@@ -221,53 +225,70 @@ export const FormConverter: React.FC<FormConverterProps> = ({
         <Controller
           name="products_ru"
           control={control}
-          rules={{ required: "Это поле обязательно" }}
+          rules={{ required: "Это поле обязательное" }}
           render={({ field, fieldState: { error } }) => {
             // Используем field.value для поиска текущего значения
             const currentValue =
               option_products.find((option) => option.label === field.value) ||
               null;
-
             return (
               <Autocomplete
                 {...field} // Передаем field в Autocomplete
                 value={currentValue}
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
                 disablePortal
                 id="product"
                 options={option_products}
                 sx={outlinedInputStyles}
                 onChange={(event, newValue) => {
-                  field.onChange(newValue ? newValue.label : ""); // Обновляем значение через field.onChange
+                  const productLabel = newValue ? newValue.label : "";
+                  const productValue = newValue
+                    ? newValue.value
+                    : "Ошибка расчета";
+                  field.onChange(productLabel); // Обновляем значение через field.onChange
                   handleAutocompleteChange(event, newValue); // Вызываем handleAutocompleteChange и передаем field.onChange
+                  reset({
+                    ...defaultValues,
+                    products_ru: productLabel,
+                    products_value: productValue,
+                  });
                 }}
                 renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    required
-                    label="Введите или выберите из списка"
-                    error={!!error}
-                    helperText={error ? error.message : ""} // Сообщение об ошибке
-                    InputLabelProps={{
-                      sx: {
-                        "&.MuiInputLabel-shrink": {
-                          color: "#779d77 !important",
-                          "&.Mui-focused": {
+                  <>
+                    <TextField
+                      {...params}
+                      name={field.name}
+                      label="Введите или выберите из списка *"
+                      inputRef={field.ref}
+                      error={!!error}
+                      InputLabelProps={{
+                        sx: {
+                          "&.MuiFormLabel-root": {
+                            color: "#666666 !important",
+                          },
+                          "&.MuiFormLabel-root.Mui-error": {
+                            color: "#666666 !important", // Переопределяем красный цвет ошибки
+                          },
+                          "&.MuiInputLabel-shrink": {
                             color: "#779d77 !important",
+                            "&.Mui-focused": {
+                              color: "#779d77 !important",
+                            },
                           },
                         },
-                      },
-                    }}
-                    FormHelperTextProps={{
-                      sx: {
-                        color: "red", // Красный цвет текста ошибки
-                        marginLeft: 0, // Убираем отступ слева
-                        marginTop: 1, // Отступ сверху
-                      },
-                    }}
-                  />
+                      }}
+                    />
+                    <ErrorMessage
+                      errors={errors}
+                      name="products_ru"
+                      render={({ message }: { message?: string }) => (
+                        <p
+                          style={{ color: "red", marginLeft: 0, marginTop: 10 }}
+                        >
+                          {message}
+                        </p>
+                      )}
+                    />
+                  </>
                 )}
                 closeText="Close"
                 popupIcon={<ArrowDownIcon color="#779D77" />}

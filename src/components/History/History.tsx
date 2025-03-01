@@ -60,7 +60,7 @@ export const History: React.FC<HistoryProps> = ({
             );
             const abbreviatedMeasure = abbreviateMeasureTo(history.measure);
             return (
-              <li className={styles.history__item}>
+              <li key={history.id} className={styles.history__item}>
                 <span className={styles.history__text}>
                   {" "}
                   {history.products_ru} {history.number} {abbreviatedMeasureInput}{" "}

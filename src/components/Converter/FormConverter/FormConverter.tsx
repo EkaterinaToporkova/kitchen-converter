@@ -15,7 +15,6 @@ import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Action } from "../../../App";
 import { useForm, Controller } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
 
 // Export data
 import products from "../../../data/products.json";
@@ -35,6 +34,7 @@ interface FormData {
   measure_input_value: string;
   measure: string;
   measure_value: string;
+  resultConversetion: number;
 }
 
 interface FormConverterProps {
@@ -68,6 +68,7 @@ const defaultValues: FormData = {
   measure_input_value: "",
   measure: "",
   measure_value: "",
+  resultConversetion: 0,
 };
 
 // Обработчик изменения поля «Продукт»
@@ -164,29 +165,27 @@ export const FormConverter: React.FC<FormConverterProps> = ({
   const toUnit = units[measureValue as keyof typeof units];
   const amount = parseFloat(numberValue);
 
+  const VOLUME = "Объем" as const;
+  const WEIGHT = "Вес" as const;
+
   // Обработчик отправки формы
   const onSubmit = (data: FormData) => {
-    const isVolumeCorrect =
-      radioButtonsValue === "Объем" &&
-      option_volume.some((e) => e.value === measureValue);
-    const isWeightCorrect =
-      radioButtonsValue === "Вес" &&
-      option_weight.some((e) => e.value === measureValue);
-    const isWeightToVolume =
-      radioButtonsValue === "Вес" &&
-      option_volume.some((e) => e.value === measureValue);
-    const isVolumeToWeight =
-      radioButtonsValue === "Объем" &&
-      option_weight.some((e) => e.value === measureValue);
+    const volumeMatch = option_volume.some((e) => e.value === measureValue);
+    const weightMatch = option_weight.some((e) => e.value === measureValue);
 
     let conversionResult = 0;
-
-    if (isVolumeCorrect || isWeightCorrect) {
-      conversionResult = (amount * fromUnit) / toUnit;
-    } else if (isWeightToVolume) {
-      conversionResult = (amount * fromUnit) / density / toUnit;
-    } else if (isVolumeToWeight) {
-      conversionResult = (amount * fromUnit * density) / toUnit;
+    if (radioButtonsValue === VOLUME) {
+      if (volumeMatch) {
+        conversionResult = (amount * fromUnit) / toUnit;
+      } else if (weightMatch) {
+        conversionResult = (amount * fromUnit * density) / toUnit;
+      }
+    } else if (radioButtonsValue === WEIGHT) {
+      if (weightMatch) {
+        conversionResult = (amount * fromUnit) / toUnit;
+      } else if (volumeMatch) {
+        conversionResult = (amount * fromUnit) / density / toUnit;
+      }
     }
 
     const resultConversetion = Math.round(conversionResult * 100) / 100;
@@ -198,8 +197,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
   };
 
   const handleReset = () => {
-    onReset(); // Вызываем onReset, если он нужен
-    reset(); // Сбрасываем форму к defaultValues
+    onReset(); // Вызываем onReset
+    reset(defaultValues); // Сбрасываем форму к defaultValues
   };
 
   return (
@@ -251,6 +250,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                     products_ru: productLabel,
                     products_value: productValue,
                   });
+                  onReset();
                 }}
                 renderInput={(params) => (
                   <>
@@ -262,12 +262,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                       error={!!error}
                       InputLabelProps={{
                         sx: {
-                          "&.MuiFormLabel-root": {
-                            color: "#666666 !important",
-                          },
-                          "&.MuiFormLabel-root.Mui-error": {
-                            color: "#666666 !important", // Переопределяем красный цвет ошибки
-                          },
                           "&.MuiInputLabel-shrink": {
                             color: "#779d77 !important",
                             "&.Mui-focused": {
@@ -276,17 +270,6 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                           },
                         },
                       }}
-                    />
-                    <ErrorMessage
-                      errors={errors}
-                      name="products_ru"
-                      render={({ message }: { message?: string }) => (
-                        <p
-                          style={{ color: "red", marginLeft: 0, marginTop: 10 }}
-                        >
-                          {message}
-                        </p>
-                      )}
                     />
                   </>
                 )}
@@ -380,33 +363,38 @@ export const FormConverter: React.FC<FormConverterProps> = ({
             <Controller
               name="number"
               control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  required
-                  value={field.value}
-                  onChange={(event) => {
-                    field.onChange(event.target.value);
-                    handleNumberChange(
-                      event as React.ChangeEvent<HTMLInputElement>
-                    );
-                  }}
-                  id="outlined-number"
-                  label="Введите число"
-                  type="number"
-                  sx={outlinedInputStyles}
-                  inputProps={{ min: 0.01, step: 0.01 }}
-                  InputLabelProps={{
-                    sx: {
-                      "&.MuiInputLabel-shrink": {
-                        color: "#779d77 !important",
-                        "&.Mui-focused": {
+              rules={{ required: "Это поле обязательное" }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <TextField
+                    {...field}
+                    name={field.name}
+                    value={field.value}
+                    onChange={(event) => {
+                      field.onChange(event.target.value);
+                      handleNumberChange(
+                        event as React.ChangeEvent<HTMLInputElement>
+                      );
+                    }}
+                    id="outlined-number"
+                    label="Введите число *"
+                    inputRef={field.ref}
+                    error={!!error}
+                    type="number"
+                    sx={outlinedInputStyles}
+                    inputProps={{ min: 0.01, step: 0.01 }}
+                    InputLabelProps={{
+                      sx: {
+                        "&.MuiInputLabel-shrink": {
                           color: "#779d77 !important",
+                          "&.Mui-focused": {
+                            color: "#779d77 !important",
+                          },
                         },
                       },
-                    },
-                  }}
-                />
+                    }}
+                  />
+                </>
               )}
             />
           </FormControl>
@@ -417,7 +405,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
             <Controller
               name="measure_input"
               control={control}
-              render={({ field }) => {
+              rules={{ required: "Это поле обязательное" }}
+              render={({ field, fieldState: { error } }) => {
                 // Используем field.value для поиска текущего значения
                 const currentValue =
                   options_weight_volume.find(
@@ -445,8 +434,10 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        required
-                        label="Мера"
+                        name={field.name}
+                        label="Мера *"
+                        inputRef={field.ref}
+                        error={!!error}
                         InputLabelProps={{
                           sx: {
                             "&.MuiInputLabel-shrink": {
@@ -481,7 +472,8 @@ export const FormConverter: React.FC<FormConverterProps> = ({
         <Controller
           name="measure"
           control={control}
-          render={({ field }) => {
+          rules={{ required: "Это поле обязательное" }}
+          render={({ field, fieldState: { error } }) => {
             const currentValue =
               option_measure.find((option) => option.label === field.value) ||
               null;
@@ -503,8 +495,10 @@ export const FormConverter: React.FC<FormConverterProps> = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    required
+                    name={field.name}
                     label="Мера или мерный предмет"
+                    inputRef={field.ref}
+                    error={!!error}
                     InputLabelProps={{
                       sx: {
                         "&.MuiInputLabel-shrink": {

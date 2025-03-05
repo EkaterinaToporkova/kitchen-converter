@@ -101,14 +101,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
   onReset,
   dispatch,
 }) => {
-  const {
-    handleSubmit,
-    watch,
-    setValue,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<FormData>({
+  const { handleSubmit, watch, setValue, reset, control } = useForm<FormData>({
     defaultValues,
     mode: "onSubmit",
   });

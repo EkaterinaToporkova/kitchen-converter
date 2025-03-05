@@ -59,7 +59,7 @@ export interface BoundAddHistoryItemParams {
 const reducer = (state: HistoryItem[], action: Action) => {
   switch (action.type) {
     case ADD_HISTORY_ITEM: {
-      const newState = [{ ...action.payload, id: Date.now() }, ...state]
+      const newState = [{ ...action.payload, id: Date.now() }, ...state];
       return newState.slice(0, 10);
     }
 
@@ -75,7 +75,11 @@ const reducer = (state: HistoryItem[], action: Action) => {
 };
 
 const App: React.FC = () => {
-  const [histories, dispatch] = React.useReducer(reducer, JSON.parse(localStorage.getItem("historylist") || "[]") || []  as HistoryItem[]);
+  const [histories, dispatch] = React.useReducer(
+    reducer,
+    JSON.parse(localStorage.getItem("historylist") || "[]") ||
+      ([] as HistoryItem[])
+  );
 
   const boundDeleteHistoryItem = (id: number) => {
     const action = { type: DELETE_HISTORY_ITEM, payload: { id } };
@@ -96,7 +100,6 @@ const App: React.FC = () => {
   };
 
   return (
-
     <>
       <div className="wrapper">
         <Header />
@@ -120,7 +123,19 @@ const App: React.FC = () => {
             </div>
           </div>
         </main>
-        <footer className="footer">Подвал</footer>
+        <footer className="footer">
+          <div className={classnames("footer__container", "_container")}>
+            <div className="footer__title">Над проектом работали</div>
+            <ul className="footer__list">
+              <li className="footer__item">Разработчик: Екатерина Топоркова</li>
+              <li className="footer__item">Дизайнер: Татьяна Гурина</li>
+              <li className="footer__item">Ментор: Павел Фофанов</li>
+            </ul>
+          </div>
+          <div className="footer__copy">
+            ©2025 Made with Love By Katya Toporkova All right reserved
+          </div>
+        </footer>
       </div>
     </>
   );

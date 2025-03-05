@@ -104,12 +104,38 @@ body {
   object-fit: contain;
 }
 
-/* FOOTER */
-.footer {
-}
-
 .shadow_content {
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0px 5px 10px 0px rgba(39, 23, 0, 0.2);
   border-radius: 12px;
+}
+
+/* FOOTER */
+.footer {
+  background-color: #779d77;
+  padding: 30px 0;
+  text-align: center;
+  color: #fdfbf8;
+  font-size: 15px;
+}
+
+.footer__container {
+}
+
+.footer__title {
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.footer__list {
+}
+
+.footer__item {
+  margin: 5px 0;
+  font-size: 15px;
+}
+
+.footer__copy {
+  margin-top: 20px;
+  font-size: 14px;
 }

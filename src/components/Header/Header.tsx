@@ -9,7 +9,7 @@ export const Header: React.FC = () => {
     <header className={styles.header}>
       <div className={classnames(styles.header__container, "_container")}>
           <a href="#" className={styles.header__logo}>Kitchen Converter</a> 
-          <nav className={classnames(styles.header__menu, styles.menu)}>
+          {/* <nav className={classnames(styles.header__menu, styles.menu)}>
             <ul className={styles.menu__list}>
               <li className={styles.menu__item}>
                 <a href="#!" className={styles.menu__link}>
@@ -26,7 +26,7 @@ export const Header: React.FC = () => {
                 <a href="#!" className={styles.menu__link}>FAQ</a>
               </li>
             </ul>
-          </nav>
+          </nav> */}
         </div>
     </header>
   );

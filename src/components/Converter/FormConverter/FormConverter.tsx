@@ -110,7 +110,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
 
   // Обработчик изменения поля «Продукт»
   const handleAutocompleteChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: ProductOption | null
   ) => {
     setValue("products_ru", newValue ? newValue.label : "");
@@ -133,7 +133,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
     radioButtonsValue === "Объем" ? option_volume : option_weight;
 
   const handleMeasureNumberChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: MeasureNumberOption | null
   ) => {
     setValue("measure_input", newValue ? newValue.label : "");
@@ -141,7 +141,7 @@ export const FormConverter: React.FC<FormConverterProps> = ({
   };
 
   const handleMeasureChange = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: MeasureOption | null
   ) => {
     setValue("measure", newValue ? newValue.label : "");

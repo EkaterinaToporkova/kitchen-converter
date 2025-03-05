@@ -119,7 +119,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className={classnames("main-block__image", "_ibg")}>
-              <img src="src/assets/images/food.png" alt="food" />
+              <img src="/assets/images/food.png" alt="food" />
             </div>
           </div>
         </main>
